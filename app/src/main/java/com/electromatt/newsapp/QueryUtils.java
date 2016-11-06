@@ -20,14 +20,13 @@ import static com.electromatt.newsapp.NewsActivity.LOG_TAG;
 
 public final class QueryUtils {
 
-    private QueryUtils() {
-    }
+    private QueryUtils() {}
+
     private static List<News> extractFeatureFromJson(String newsJSON) {
         if (TextUtils.isEmpty(newsJSON)) {
             return null;
         }
         List<News> news = new ArrayList<>();
-
         try {
             JSONObject baseJsonResponse = new JSONObject(newsJSON);
             JSONObject results = baseJsonResponse.getJSONObject("response");
@@ -39,15 +38,14 @@ public final class QueryUtils {
                     JSONObject currentNews = newsArray.getJSONObject(i);
                     String title = currentNews.getString("webTitle");
                     String url = currentNews.getString("webUrl");
+                    String section = currentNews.getString("sectionName");
                     String date = currentNews.getString("webPublicationDate");
-
-                    News article = new News(title, url, date);
+                    News article = new News(title, section, url, date);
                     news.add(article);
                 }
             } else{
                 return null;
             }
-
         } catch (JSONException e) {
             Log.e("QueryUtils", "Problem parsing the news JSON results", e);
         }
@@ -108,6 +106,7 @@ public final class QueryUtils {
         }
         return jsonResponse;
     }
+
     private static String readFromStream(InputStream inputStream) throws IOException {
         StringBuilder output = new StringBuilder();
         if (inputStream != null) {
@@ -121,5 +120,4 @@ public final class QueryUtils {
         }
         return output.toString();
     }
-
 }

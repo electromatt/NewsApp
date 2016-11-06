@@ -22,9 +22,8 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
     public static final String LOG_TAG = NewsActivity.class.getName();
     private NewsAdapter mAdapter;
     private TextView mEmptyStateTextView;
-    private static final int BOOK_LOADER_ID = 1;
+    private static final int NEWS_LOADER_ID = 1;
     private static final String REQUEST_URL = "http://content.guardianapis.com/search";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,26 +50,21 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if(networkInfo != null && networkInfo.isConnected()){
             LoaderManager loaderManager = getLoaderManager();
-            loaderManager.initLoader(BOOK_LOADER_ID, null, this);
+            loaderManager.initLoader(NEWS_LOADER_ID, null, this);
         } else {
             View loadingSpinner = findViewById(R.id.loading_spinner);
             loadingSpinner.setVisibility(View.GONE);
             mEmptyStateTextView.setText(R.string.no_internet);
-
         }
-
     }
 
     @Override
     public Loader<List<News>> onCreateLoader(int i, Bundle bundle) {
         Uri baseUri = Uri.parse(REQUEST_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
-
         uriBuilder.appendQueryParameter("section", "technology");
         uriBuilder.appendQueryParameter("api-key", "test");
-
         return new NewsLoader(this, uriBuilder.toString());
-
     }
 
     @Override
